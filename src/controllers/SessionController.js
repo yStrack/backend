@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const gfs = require("multer-gridfs-storage");
+const multer = require("multer");
 
 module.exports = {
   async store(req, res) {
@@ -14,6 +16,7 @@ module.exports = {
         email,
         password,
         name,
+        image: "null",
       });
     }
     return res.status(200).json(User);
@@ -32,7 +35,24 @@ module.exports = {
       if (user === undefined || user.length === 0) {
         return res.status(400).json({ message: "User not found" });
       }
-      return res.status(200).json({ name: user[0].name });
+      return res.status(200).json(user[user.length - 1]);
     });
+  },
+
+  async update(req, res) {
+    const { email } = req.body;
+    const { password } = req.body;
+    const { filename } = req.file;
+
+    User.findOneAndUpdate(
+      { email: email, password: password },
+      { image: filename },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.status(200).json({ message: "Succesfully saved." });
+      }
+    );
+
+    // return res.status(200).json({ message: "Update sucess" });
   },
 };
