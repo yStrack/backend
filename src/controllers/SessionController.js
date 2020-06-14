@@ -29,7 +29,7 @@ module.exports = {
       if (err) {
         return res.json({ message: err });
       }
-      if (User.length == 0) {
+      if (user === undefined || user.length === 0) {
         return res.status(400).json({ message: "User not found" });
       }
       return res.status(200).json({ name: user[0].name });
