@@ -8,6 +8,11 @@ module.exports = {
     const { password } = req.body; // password is randomly generated
     const { name } = req.body;
 
+    const location = {
+      type: "Point",
+      coordinates: [0, 0],
+    };
+
     let user = await User.findOne({ email });
 
     // if User does not exists
@@ -17,6 +22,7 @@ module.exports = {
         password,
         name,
         image: "null",
+        location,
       });
     }
     return res.status(200).json(User);
@@ -47,6 +53,29 @@ module.exports = {
     User.findOneAndUpdate(
       { email: email, password: password },
       { image: filename },
+      { new: true },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.status(200).json(doc);
+      }
+    );
+
+    // return res.status(200).json({ message: "Update sucess" });
+  },
+
+  async updateLocation(req, res) {
+    const { email } = req.body;
+    const { password } = req.body;
+    const { latitude, longitude } = req.body;
+
+    const location = {
+      type: "Point",
+      coordinates: [longitude, latitude],
+    };
+
+    User.findOneAndUpdate(
+      { email: email, password: password },
+      { location: location },
       { new: true },
       function (err, doc) {
         if (err) return res.send(500, { error: err });

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const PointSchema = require("./PointSchema");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -12,6 +13,10 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     image: String,
+    location: {
+      type: PointSchema,
+      index: "2dsphere",
+    },
   },
   {
     toJSON: {

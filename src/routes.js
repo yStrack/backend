@@ -12,5 +12,6 @@ routes.post(
   multer(uploadConfig).single("image"),
   SessionController.update
 );
+routes.post("/updateLocation", SessionController.updateLocation);
 
 module.exports = routes;
